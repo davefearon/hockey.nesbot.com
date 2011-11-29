@@ -2,12 +2,29 @@
 
 <div>
    <script type="text/javascript">
-   $(document).ready(function() {$("#@id").tablesorter({sortList: [[8,1],[2,1]]});} );
+   $(document).ready(function() {
+      $("#@id").tablesorter({sortList: [[8,1],[2,1]]});
+
+      //for adding row numbers
+      $(function() {
+         $.tablesorter.addWidget({
+            id: "indexFirstColumn",
+            format: function(table) {
+               for(var i=0; i < table.tBodies[0].rows.length; i++) {
+                  $("tbody tr:eq(" + (i - 1) + ") td:first",table).html(i);
+               }
+            }
+         });
+         $("#@id").tablesorter({
+            widgets: ['zebra','indexFirstColumn']
+         });
+      });
    </script>
 
    <table id="@id" class="data standings zebra-striped bordered-table">
    <thead>
    <tr>
+      <th class="header"></th>
       <th class="header">Team</th>
       <th class="header">GP</th>
       <th class="header">W</th>
@@ -22,6 +39,7 @@
    <tbody>
    @teams.map { team =>
       <tr>
+         <td></td>
          <td class="left">@team.name</td>
          <td>@team.games</td>
          <td>@team.w</td>
